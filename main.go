@@ -21,7 +21,7 @@ type Product struct {
 
 var DB *gorm.DB
 var err error
-const dsn = "root:Vidhya@14@tcp(127.0.0.1:3306)/Invertory_System?charset=utf8mb4&parseTime=True&loc=Local"
+const dsn = "admin:Vidhya_14@tcp(sample.cbmag2acul28.us-east-1.rds.amazonaws.com:3306)/sample?charset=utf8mb4&parseTime=True&loc=Local"
 
 func initializeRouter() {
 	router := mux.NewRouter()
