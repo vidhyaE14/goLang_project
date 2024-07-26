@@ -86,6 +86,7 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode("The product is deleted succesfully!!!")
 }
 
+
 func main() {
 	initializeMigiration()
 	initializeRouter()
