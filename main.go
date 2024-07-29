@@ -21,7 +21,7 @@ type Product struct {
 
 var DB *gorm.DB
 var err error
-const dsn = "admin:Vidhya_14@tcp(sample.cbmag2acul28.us-east-1.rds.amazonaws.com:3306)/sample?charset=utf8mb4&parseTime=True&loc=Local"
+const dsn = "admin:Vidhya_14@tcp(inventorysystem.cbmag2acul28.us-east-1.rds.amazonaws.com:3306)/inventorysystem?charset=utf8mb4&parseTime=True&loc=Local"
 
 func initializeRouter() {
 	router := mux.NewRouter()
@@ -85,7 +85,6 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	DB.Delete(&prod, params["id"])
 	json.NewEncoder(w).Encode("The product is deleted succesfully!!!")
 }
-
 
 func main() {
 	initializeMigiration()
