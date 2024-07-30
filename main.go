@@ -45,14 +45,14 @@ func initializeMigiration(){
 }
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type","applocation/json")
+	w.Header().Set("Content-Type","application/json")
 	var prods []Product
 	DB.Find(&prods)
 	json.NewEncoder(w).Encode(prods)
 }
 
 func GetProduct(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type","applocation/json")
+	w.Header().Set("Content-Type","application/json")
 	params := mux.Vars(r)
 	var prod Product
 	DB.First(&prod, params["id"])
@@ -60,7 +60,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateProduct(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type","applocation/json")
+	w.Header().Set("Content-Type","application/json")
 	var prod Product
 	json.NewDecoder(r.Body).Decode(&prod)
 	DB.Create(&prod)
@@ -69,7 +69,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateProduct(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type","applocation/json")
+	w.Header().Set("Content-Type","application/json")
 	params := mux.Vars(r)
 	var prod Product
 	DB.First(&prod, params["id"])
@@ -79,7 +79,7 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteProduct(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type","applocation/json")
+	w.Header().Set("Content-Type","application/json")
 	params := mux.Vars(r)
 	var prod Product
 	DB.Delete(&prod, params["id"])
