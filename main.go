@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	
+
 	"github.com/gorilla/mux"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -21,23 +21,23 @@ type Product struct {
 
 var DB *gorm.DB
 var err error
-const dsn = "admin:Vidhya_14@tcp(inventorysystem1.cbmag2acul28.us-east-1.rds.amazonaws.com:3306)/inventorysystem1?charset=utf8mb4&parseTime=True&loc=Local"
+const dsn = "admin:Vidhya_14@tcp(inventorysystem.cbmag2acul28.us-east-1.rds.amazonaws.com:3306)/inventorysystem?charset=utf8mb4&parseTime=True&loc=Local"
 
 func initializeRouter() {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/products",GetProducts).Methods("GET")
-	router.HandleFunc("/product/{id}",GetProduct).Methods("GET")
-	router.HandleFunc("/products",CreateProduct).Methods("POST")
-	router.HandleFunc("/product/{id}",UpdateProduct).Methods("PUT")
-	router.HandleFunc("/product/{id}",DeleteProduct).Methods("DELETE")
+	router.HandleFunc("/products", GetProducts).Methods("GET")
+	router.HandleFunc("/product/{id}", GetProduct).Methods("GET")
+	router.HandleFunc("/products", CreateProduct).Methods("POST")
+	router.HandleFunc("/product/{id}", UpdateProduct).Methods("PUT")
+	router.HandleFunc("/product/{id}", DeleteProduct).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":8081", router))
 }
 
-func initializeMigiration(){
-	DB,err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil{
+func initializeMigration() {
+	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
 		fmt.Println(err.Error())
 		panic("Cannot connect to DB")
 	}
@@ -45,48 +45,61 @@ func initializeMigiration(){
 }
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type","application/json")
+	w.Header().Set("Content-Type", "application/json")
 	var prods []Product
 	DB.Find(&prods)
 	json.NewEncoder(w).Encode(prods)
 }
 
 func GetProduct(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type","application/json")
+	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	var prod Product
-	DB.First(&prod, params["id"])
+	result := DB.First(&prod, params["id"])
+	if result.Error != nil {
+		http.Error(w, "Product not found", http.StatusNotFound)
+		return
+	}
 	json.NewEncoder(w).Encode(prod)
 }
 
 func CreateProduct(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type","application/json")
+	w.Header().Set("Content-Type", "application/json")
 	var prod Product
 	json.NewDecoder(r.Body).Decode(&prod)
 	DB.Create(&prod)
 	json.NewEncoder(w).Encode(prod)
-
 }
 
 func UpdateProduct(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type","application/json")
+	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	var prod Product
-	DB.First(&prod, params["id"])
+	result := DB.First(&prod, params["id"])
+	if result.Error != nil {
+		http.Error(w, "Product not found", http.StatusNotFound)
+		return
+	}
 	json.NewDecoder(r.Body).Decode(&prod)
 	DB.Save(&prod)
 	json.NewEncoder(w).Encode(prod)
 }
 
 func DeleteProduct(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type","application/json")
+	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	var prod Product
+	result := DB.First(&prod, params["id"])
+	if result.Error != nil {
+		http.Error(w, "Product not found", http.StatusNotFound)
+		return
+	}
 	DB.Delete(&prod, params["id"])
-	json.NewEncoder(w).Encode("The product is deleted succesfully!!!")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode("The product is deleted successfully!!!")
 }
 
 func main() {
-	initializeMigiration()
+	initializeMigration()
 	initializeRouter()
 }
