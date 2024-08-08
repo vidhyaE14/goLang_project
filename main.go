@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"gorm.io/driver/mysql"
@@ -21,7 +22,23 @@ type Product struct {
 
 var DB *gorm.DB
 var err error
-const dsn = "admin:Vidhya_14@tcp(inventorysystem.cbmag2acul28.us-east-1.rds.amazonaws.com:3306)/inventorysystem?charset=utf8mb4&parseTime=True&loc=Local"
+
+func getDSN() string {
+	// Retrieve the database credentials from environment variables
+	username := os.Getenv("DB_USERNAME")
+	password := os.Getenv("DB_PASSWORD")
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	database := os.Getenv("DB_NAME")
+
+	if username == "" || password == "" || host == "" || port == "" || database == "" {
+		log.Fatal("One or more environment variables are not set")
+	}
+
+	// Construct the DSN string
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		username, password, host, port, database)
+}
 
 func initializeRouter() {
 	router := mux.NewRouter()
@@ -36,6 +53,7 @@ func initializeRouter() {
 }
 
 func initializeMigration() {
+	dsn := getDSN() // Use environment variables to get DSN
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println(err.Error())
