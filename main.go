@@ -120,4 +120,5 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 func main() {
 	initializeMigration()
 	initializeRouter()
+	fmt.Println("Application is running")
 }
