@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	//"os"
+	"os"
 
 	"github.com/gorilla/mux"
 	"gorm.io/driver/mysql"
@@ -53,7 +53,16 @@ func initializeRouter() {
 }
 
 func initializeMigration() {
-	dsn := "admin:Password123@tcp(mysql-rds-1.c5eooawm67do.us-east-1.rds.amazonaws.com:3306)/inventorysystem?charset=utf8mb4&parseTime=True&loc=Local"                                  //getDSN() // Use environment variables to get DSN
+	db_password:= os.Getenv ("DB_PASSWORD")
+	if db_password == ""{
+		panic ("DB_PASSWORD env variable is not set")
+	}
+	rds_endpoint:= os.Getenv ("RDS_ENDPOINT")
+	if rds_endpoint == ""{
+		panic ("RDS_ENDPOINT env variable is not set")
+	}
+	dsn := fmt.Sprintf("admin:%s@tcp(%s)/inventorysystem?charset=utf8mb4&parseTime=True&loc=Local",db_password,rds_endpoint)
+	//dsn := "admin:ywOO73jpZd@tcp(mysql-rds-1.c5eooawm67do.us-east-1.rds.amazonaws.com:3306)/inventorysystem?charset=utf8mb4&parseTime=True&loc=Local"                                  //getDSN() // Use environment variables to get DSN
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println(err.Error())
