@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
+	//"os"
 
 	"github.com/gorilla/mux"
 	"gorm.io/driver/mysql"
