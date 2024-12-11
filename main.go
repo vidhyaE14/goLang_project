@@ -49,7 +49,7 @@ func initializeRouter() {
 	router.HandleFunc("/product/{id}", UpdateProduct).Methods("PUT")
 	router.HandleFunc("/product/{id}", DeleteProduct).Methods("DELETE")
 
-	log.Fatal(http.ListenAndServe(":8081", router))
+	log.Fatal(http.ListenAndServe("0.0.0.0:8081", router)) 
 }
 
 func initializeMigration() {
