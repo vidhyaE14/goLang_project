@@ -1,0 +1,7 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: my-service
+  annotations:
+    vault.io/secrets-path: test/backstage    # relative path inside your Vault engine
+    vault.io/secrets-engine: secrets         # optional, overrides global config
