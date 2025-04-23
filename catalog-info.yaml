@@ -3,7 +3,7 @@ kind: Component
 metadata:
   name: my-service-vault
   annotations:
-    vault.io/secrets-path: test/backstage, test/backstage2
+    vault.io/secrets-path: test/backstage
     vault.io/secrets-engine: secrets
 spec:
   type: service
