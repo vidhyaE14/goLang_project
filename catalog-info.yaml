@@ -3,7 +3,7 @@ kind: Component
 metadata:
   name: my-service-vault
   annotations:
-    vault.io/secrets-path: test/backstage
+    vault.io/secrets-path: test/vidhya_elango
     vault.io/secrets-engine: secrets
 spec:
   type: service
